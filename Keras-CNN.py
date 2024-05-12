@@ -5,28 +5,10 @@ from tensorflow.keras.preprocessing.sequence import pad_sequences
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Embedding, Conv1D, MaxPooling1D, GlobalMaxPooling1D, Dense
 
-# Example training data (tweet texts and labels)
-tweets = [
-    "Climate change is a serious threat to our planet.",
-    "I don't believe in man-made climate change.",
-    "The evidence for climate change is overwhelming.",
-    "Climate change is a hoax created by scientists.",
-    # Add more tweets...
-]
-
+# Input Test Data
 data = pd.read_csv("input/twitter_sentiment_data.csv")
-
 tweets = data["message"][:35154]
-
-# tweets = data["message"][:10]
-
-labels = np.array([2, -1, 2, -1])  # Example sentiment labels corresponding to tweets
-labels = data["sentiment"][:35154]
-
-# labels = data["sentiment"][:10]
-
-# test_tweets = data["message"][-10:]
-# test_labels = data["sentiment"][-10:]
+labels = data["sentiment"][:35154] # First 80% of input data
 
 # Hyperparameters
 max_words = 1000  # Maximum number of words in the vocabulary
@@ -60,22 +42,9 @@ model = Sequential([
 model.compile(optimizer='adam', loss='mean_squared_error', metrics=['mae'])
 
 # Train the model
-model.fit(X_train, labels, epochs=10, batch_size=32, validation_split=0.2)
+model.fit(X_train, labels, epochs=10, batch_size=32)
 
-# Evaluate the model on the validation data
-# loss, accuracy = model.evaluate(test_tweets, test_labels)
-
-# print("Validation Loss:", loss)
-# print("Validation Accuracy:", accuracy)
-
-# # Sample test inputs (tweet texts)
-test_tweets = [
-    "Climate change is a real problem that needs immediate action.",
-    "I'm not convinced that humans are causing climate change.",
-    "Global warming is just a natural cycle of the Earth.",
-    # Add more test tweets...
-]
-
+# Set the test data to be the last 20% of the input data
 test_tweets = list(data["message"][-8788:])
 
 # Tokenize and pad the test sequences
@@ -90,10 +59,7 @@ for i, tweet in enumerate(test_tweets):
     print(f"Tweet: {tweet}")
     print(f"Predicted sentiment: {predictions[i][0]}")
 
-
-# Sample test labels
-test_labels = [2, 0, -1]  # Example test labels (-1, 0, and 1 indicate sentiments)
-
+# Set test labels from the input data 
 test_labels = list(data["sentiment"][-8788:])
 
 # Calculate the accuracy
