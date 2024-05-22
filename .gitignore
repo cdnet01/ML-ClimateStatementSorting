@@ -1,3 +1,4 @@
 .DS_Store
 input/reddit_opinion_climate_change.csv
 model/*
+input/reddit_data_with_sentiment.csv
